@@ -13,7 +13,7 @@ CXXFLAGS = -std=c++17 -g	 # The C++ compiler options (C++17 and preserve debug s
 # The all target builds all of the programs handled by the makefile.
 all: graph
 
-graph: graph.cc main.cc aux_functions.cc menu.cc
+graph: cell.cc main.cc labyrinth.cc aux_functions.cc menu.cc
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 # Indicate that the all and clean targets do not

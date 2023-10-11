@@ -20,7 +20,7 @@
  * 26/09/2023 - Creación (primera versión) del código
  */
 
-#include "graph.h"
+#include "aux_functions.h"
 
 /** Main function
  *  @param[in] argc Number of command line parameters
@@ -34,11 +34,12 @@ int main(int argc, char* argv[]) {
     std::cerr << "The file failed to open, use --help for further information\n";
     return 1;
   }
-  Graph graph(input_file);
+  Labyrinth labyrinth(input_file);
+  labyrinth.PrintLabyrinth();
   int signal = 0;
   while (signal != 1)
   {
-    signal = Menu(graph);
+    signal = Menu(labyrinth);
     if (signal == 3) {
       std::cout << "Enter the new file name: ";
       std::string file_name;
@@ -49,7 +50,7 @@ int main(int argc, char* argv[]) {
         std::cerr << "The file failed to open. Using " << argv[1] << " instead\n\n";
         input_file.open(argv[1]);
       }
-      graph = Graph(input_file);
+      labyrinth = Labyrinth(input_file);
     }
   }
   return 0;

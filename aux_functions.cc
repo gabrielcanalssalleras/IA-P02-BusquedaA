@@ -16,7 +16,7 @@
  * https://drive.google.com/file/d/15HKX9AdAv0_3KYwmYDA2VWz-riiimztK/view
  */
 
-#include "graph.h"
+#include "aux_functions.h"
 
 /** Prints how to use correctly the program.
  *  In case of incorrect usage, prints the message and the program finishes.
@@ -78,7 +78,7 @@ std::string VectorToString(std::vector<int> vector) {
  *  @param[in] depth_first: True if depth first search, false if breadth first search
  *  @return Output file stream
 */
-std::ofstream StoreSearch(Graph& graph, int start_node, int end_node, bool depth_first) {
+/* std::ofstream StoreSearch(Graph& graph, int start_node, int end_node, bool depth_first) {
   std::string filename = depth_first ? "busquedas_profundidad.md" : "busquedas_amplitud.md";
   std::ofstream output_file;
   output_file.open(filename, std::ios_base::app);
@@ -97,7 +97,7 @@ std::ofstream StoreSearch(Graph& graph, int start_node, int end_node, bool depth
               << start_node << " | " << end_node << " | " << path << " | " << graph.CalculateCost(table.path)
               << " | " << generated << " | " << visited << " | \n";
   return output_file;
-}
+} */
 
 /** Checks if a node is in a branch.
  *  @param[in] node: Node to check

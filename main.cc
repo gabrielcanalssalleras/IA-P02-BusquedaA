@@ -29,7 +29,8 @@
 int main(int argc, char* argv[]) {
   Usage(argc, argv);
   std::ifstream input_file;
-  input_file.open(argv[1]);
+  std::string file_name{argv[1]};
+  input_file.open(file_name);
   if (input_file.fail()) {
     std::cerr << "The file failed to open, use --help for further information\n";
     return 1;
@@ -39,10 +40,9 @@ int main(int argc, char* argv[]) {
   int signal = 0;
   while (signal != 1)
   {
-    signal = Menu(labyrinth);
+    signal = Menu(labyrinth, file_name);
     if (signal == 3) {
       std::cout << "Enter the new file name: ";
-      std::string file_name;
       std::cin >> file_name;
       input_file.close();
       input_file.open(file_name);

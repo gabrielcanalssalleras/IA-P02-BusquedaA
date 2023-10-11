@@ -22,7 +22,7 @@
 
 #include "aux_functions.h"
 
-int Menu(Labyrinth& labyrinth) {
+int Menu(Labyrinth& labyrinth, std::string& filename) {
   std::cout << "Choose an option:\n";
   std::cout << "1. A* Search\n";
   std::cout << "2. Set Initial Node\n";
@@ -35,6 +35,7 @@ int Menu(Labyrinth& labyrinth) {
   switch (option) {
     case '1':
       std::cout << "\nA* Search\n\n";
+      StoreSearch(labyrinth, filename);
       return 0;
     case '2':
       std::cout << "\nSet Initial Node\n\n";
@@ -59,11 +60,3 @@ int Menu(Labyrinth& labyrinth) {
       return 0;
   }
 }
-
-/* inline bool ExistentNode(Graph& graph, int node) {
-  if (!graph.NodeExists(node)) {
-    std::cout << "The node does not exist\n";
-    return false;
-  }
-  return true;
-} */

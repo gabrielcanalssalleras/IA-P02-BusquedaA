@@ -34,3 +34,8 @@ Cell::Cell() {
   kind_ = 0;
 }
 
+std::string Cell::GetPosString() const {
+  std::string pos = "(" + std::to_string(i_pos_ + 1) +
+                     ", " + std::to_string(j_pos_ + 1) + ")";
+  return pos;
+}

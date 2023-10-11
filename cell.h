@@ -34,6 +34,7 @@ class Cell {
   int GetKind() const { return kind_; }
   void SetKind(int kind) { kind_ = kind; }
   std::pair<int, int> GetPos() const { return std::make_pair(i_pos_, j_pos_); }
+  std::string GetPosString() const;
  private:
   int i_pos_, j_pos_, f_value_, g_value_, h_value_;
   int kind_;
@@ -47,6 +48,8 @@ class Labyrinth : public Cell {
   Cell GetStartNode() const { return start_node_; }
   Cell GetEndNode() const { return end_node_; }
   Cell& Node(std::pair<int, int> pos) { return labyrinth_[pos.first][pos.second]; }
+  int GetRows() const { return rows_; }
+  int GetColumns() const { return columns_; }
  private:
   std::vector<std::vector<Cell>> labyrinth_;
   int rows_;

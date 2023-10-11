@@ -40,16 +40,20 @@ void Labyrinth::ChangeNode(bool final) {
   std::cin >> i_pos;
   std::cout << "Enter the column of the node: ";
   std::cin >> j_pos;
+  if (i_pos < 1 || i_pos > rows_ || j_pos < 1 || j_pos > columns_) {
+    std::cerr << "The node is out of bounds. No changes applied.\n";
+    return;
+  }
   if (final) {
     std::pair<int, int> end_pos = end_node_.GetPos();
     Node(end_pos).SetKind(1);
-    labyrinth_[i_pos][j_pos] = Cell(i_pos, j_pos, 4);
-    end_node_ = Cell(i_pos, j_pos, 4);
+    labyrinth_[i_pos - 1][j_pos - 1] = Cell(i_pos - 1, j_pos - 1, 4);
+    end_node_ = Cell(i_pos - 1, j_pos - 1, 4);
   } else {
     std::pair<int, int> start_pos = start_node_.GetPos();
     Node(start_pos).SetKind(1);
-    labyrinth_[i_pos][j_pos] = Cell(i_pos, j_pos, 3);
-    start_node_ = Cell(i_pos, j_pos, 3);
+    labyrinth_[i_pos - 1][j_pos - 1] = Cell(i_pos - 1, j_pos - 1, 3);
+    start_node_ = Cell(i_pos - 1, j_pos - 1, 3);
   }
   std::cout << "The " << (final ? "final" : "initial") << " node has been set to"
             << " (" << i_pos << ", " << j_pos << ")\n";

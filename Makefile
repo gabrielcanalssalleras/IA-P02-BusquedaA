@@ -33,4 +33,4 @@ clean :
 	find . -name basura -exec rm {} \;
 
 blank :
-	rm -rf *d.md
+	rm -rf *s.md

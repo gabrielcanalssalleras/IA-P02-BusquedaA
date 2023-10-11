@@ -41,22 +41,6 @@ void Usage(int argc, char *argv[]) {
   }
 }
 
-/** Gets the name of the instance based on the number of lines of the file.
- *  @param[in] filename: Name of the file to read
- *  @return Name of the instance
- */
-std::string GetID(std::string filename) {
-  int number_of_lines = 1;
-  std::string line;
-  std::ifstream file(filename);
-  std::getline(file, line);
-  std::getline(file, line);
-  while (std::getline(file, line)) ++number_of_lines;
-  if (number_of_lines == 1) return "ID-1";
-  line = "ID-" + std::to_string(number_of_lines);
-  return line;
-}
-
 /** Turns a vector of integers into a string.
  *  @param[in] vector: Vector to turn into string 
  *  @return String containing the vector
@@ -78,26 +62,28 @@ std::string VectorToString(std::vector<int> vector) {
  *  @param[in] depth_first: True if depth first search, false if breadth first search
  *  @return Output file stream
 */
-/* std::ofstream StoreSearch(Graph& graph, int start_node, int end_node, bool depth_first) {
-  std::string filename = depth_first ? "busquedas_profundidad.md" : "busquedas_amplitud.md";
+std::ofstream StoreSearch(Labyrinth& labyrinth, std::string& instance_name) {
   std::ofstream output_file;
-  output_file.open(filename, std::ios_base::app);
+  output_file.open("busquedas.md", std::ios_base::app);
   if (output_file.tellp() == 0) { 
-    output_file << "| Instancia | n | m | Vo |";
-    output_file << " Vd | Camino | Distancia | Nodos Generados | Nodos inspeccionados |\n";
+    output_file << "| Instancia | n | m | S | E |  Camino | ";
+    output_file << "Coste | Nodos Generados | Nodos inspeccionados |\n";
     output_file << "| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n";
   }
-  std::string id = GetID(filename);
-  Instance table = depth_first ? graph.DepthFirstSearch(start_node, end_node) 
-                              : graph.BreadthFirstSearch(start_node, end_node);
+  std::string id = instance_name.substr(0, instance_name.size() - 4);
+  Instance table;// = labyrinth.AStarSearch();
   std::string path = VectorToString(table.path);
   std::string generated = VectorToString(table.generated);
   std::string visited = VectorToString(table.visited);
-  output_file << "| " << id << " | " << graph.Size() << " | " << graph.EdgeCount() << " | " 
-              << start_node << " | " << end_node << " | " << path << " | " << graph.CalculateCost(table.path)
-              << " | " << generated << " | " << visited << " | \n";
+  std::string start = std::to_string(labyrinth.GetStartNode().GetKind());
+  output_file << "| " << id << " | " << std::to_string(labyrinth.GetRows()) 
+              << " | " << std::to_string(labyrinth.GetColumns()) << " | "
+              << labyrinth.GetStartNode().GetPosString() << " | "
+              << labyrinth.GetEndNode().GetPosString() << " | " 
+              << path << " | " << "s"/* graph.CalculateCost(table.path) */ << " | " 
+              << generated << " | " << visited << " | \n";
   return output_file;
-} */
+}
 
 /** Checks if a node is in a branch.
  *  @param[in] node: Node to check

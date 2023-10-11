@@ -24,7 +24,7 @@ and performs a search on it from start to end (A* algorithm)\n";
 // Declaration of the Usage function
 void Usage(int argc, char *argv[]);
 
-int Menu(Labyrinth& labyrinth);
+int Menu(Labyrinth& labyrinth, std::string& filename);
 
 struct Instance {
   std::vector<int> path;
@@ -34,7 +34,7 @@ struct Instance {
 
 bool IsValid(int row, int col);
 
-std::ofstream StoreSearch(Labyrinth& labyrinth, std::string instance_name);
+std::ofstream StoreSearch(Labyrinth& labyrinth, std::string& instance_name);
 
 bool FoundInBranch(int node, std::vector<int> branch);
 

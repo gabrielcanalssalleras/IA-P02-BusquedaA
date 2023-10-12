@@ -2,12 +2,12 @@
  * Universidad de La Laguna
  * Escuela Superior de Ingeniería y Tecnología
  * Grado en Ingeniería Informática
- * Asignatura: Computabilidad y Algoritmia
+ * Asignatura: Inteligencia Artificial
  * Curso: 3º
- * Práctica 1: Algoritmos de búsqueda. Búsquedas no informadas.
+ * Práctica 2: Búsqueda A*. Encuentra la salida del laberinto con el menor coste
  * Autor: Gabriel Ángel Canals Salleras
  * Correo: alu0101460468@ull.edu.es
- * Fecha: 26/09/2023
+ * Fecha: 12/10/2023
  *
  * Archivo main.cc: programa cliente.
  * Contiene la función main del proyecto que recibe los parámetros del cliente
@@ -15,16 +15,14 @@
  * solicitada en el fichero de salida de nombre fileout.txt.
  *
  * Referencias:
- * https://drive.google.com/file/d/15HKX9AdAv0_3KYwmYDA2VWz-riiimztK/view
- * Historial de revisiones
- * 26/09/2023 - Creación (primera versión) del código
+ * https://drive.google.com/file/d/1ZSin5hXGXC3EMwkbmoFqA_ZgnnQxcq7F/view
  */
 
 #include "aux_functions.h"
 
-/** Main function
- *  @param[in] argc Number of command line parameters
- *  @param[in] argv Vector containing (char*) the parameters
+/** Función principal del programa.
+ *  @param[in] argc Número de parámetros en la linea de comandos
+ *  @param[in] argv Vector de parámetros en la linea de comandos
  */
 int main(int argc, char* argv[]) {
   Usage(argc, argv);
@@ -41,7 +39,7 @@ int main(int argc, char* argv[]) {
   while (signal != 1)
   {
     signal = Menu(labyrinth, file_name);
-    if (signal == 3) {
+    if (signal == 3) { // Cambiar fichero de entrada
       std::cout << "Enter the new file name: ";
       std::cin >> file_name;
       input_file.close();

@@ -1,5 +1,27 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Asignatura: Inteligencia Artificial
+ * Curso: 3º
+ * Práctica 2: Búsqueda A*. Encuentra la salida del laberinto con el menor coste
+ * Autor: Gabriel Ángel Canals Salleras
+ * Correo: alu0101460468@ull.edu.es
+ * Fecha: 12/10/2023
+ *
+ * Archivo labyrinth.cc: implementación de la clase Labyrinth.
+ * Contiene la implementación de los métodos de la clase Labyrinth.
+ *
+ * Referencias:
+ * https://drive.google.com/file/d/1ZSin5hXGXC3EMwkbmoFqA_ZgnnQxcq7F/view
+ */
 #include "cell.h"
 
+/**
+ * @brief Construye un nuevo objeto Labyrinth:: Labyrinth
+ * 
+ * @param input_file: fichero de entrada
+ */
 Labyrinth::Labyrinth(std::ifstream& input_file) {
   std::string line;
   std::getline(input_file, line);
@@ -18,6 +40,17 @@ Labyrinth::Labyrinth(std::ifstream& input_file) {
   }
 }
 
+/**
+ * @brief Imprime el laberinto. Los muros se imprimirán en negro,
+ *        los nodos libres en blanco, el nodo inicial en verde y
+ *        el nodo final en amarillo. Los nodos se representan mediante
+ *        el carácter '■'.
+ * 
+ * @param open_nodes: nodos abiertos. Se imprimirán en magenta
+ * @param closed_nodes: nodos cerrados. Se imprimirán en azul
+ * @param current_node: nodo actual. Se imprimirá en verde
+ * @param path: camino encontrado. Se imprimirá en verde
+ */
 void Labyrinth::PrintLabyrinth(CellVector open_nodes, CellVector closed_nodes,
                                Cell current_node, CellVector path) const {
   for (std::vector<Cell> row : labyrinth_) {
@@ -40,6 +73,11 @@ void Labyrinth::PrintLabyrinth(CellVector open_nodes, CellVector closed_nodes,
   }
 }
 
+/**
+ * @brief Cambia el nodo inicial o final para poder modificarlo manualmente
+ * 
+ * @param final: booleano que indica si se quiere cambiar el nodo final
+ */
 void Labyrinth::ChangeNode(bool final) {
   int i_pos, j_pos;
   std::cout << "Enter the row of the node: ";
@@ -65,6 +103,12 @@ void Labyrinth::ChangeNode(bool final) {
             << " (" << i_pos << ", " << j_pos << ")\n";
 }
 
+/**
+ * @brief Obtiene los vecinos de un nodo
+ * 
+ * @param node: nodo del que se quieren obtener los vecinos
+ * @return CellVector con los vecinos del nodo
+ */
 CellVector Labyrinth::GetNeighbors(Cell node) const {
   CellVector neighbors;
   std::pair<int, int> pos = node.GetPos();
@@ -83,6 +127,11 @@ CellVector Labyrinth::GetNeighbors(Cell node) const {
   return neighbors;
 }
 
+/**
+ * @brief Realiza una búsqueda A* sobre el laberinto
+ * 
+ * @return Instancia con la solución del laberinto
+ */
 Instance Labyrinth::AStarSearch() const {
   CellVector open_nodes{GetStartNode()}, closed_nodes, generated{GetStartNode()};
   Cell current_node;

@@ -4,29 +4,30 @@
  * Grado en Ingeniería Informática
  * Asignatura: Inteligencia Artificial
  * Curso: 3º
- * Práctica 1: Algoritmos de búsqueda. Búsquedas no informadas.
+ * Práctica 2: Búsqueda A*. Encuentra la salida del laberinto con el menor coste
  * Autor: Gabriel Ángel Canals Salleras
  * Correo: alu0101460468@ull.edu.es
- * Fecha: 26/09/2023
+ * Fecha: 12/10/2023
  *
  * Archivo aux_functions.cc: implementación.
  * Contiene implementación de las funciones auxiliares para el programa principal.
  *
  * Referencias:
- * https://drive.google.com/file/d/15HKX9AdAv0_3KYwmYDA2VWz-riiimztK/view
+ * https://drive.google.com/file/d/1ZSin5hXGXC3EMwkbmoFqA_ZgnnQxcq7F/view
  */
 
 #include "aux_functions.h"
 
+// Variables globales para el modo debug y visual
 bool debug;
 bool visual;
 
-/** Prints how to use correctly the program.
- *  In case of incorrect usage, prints the message and the program finishes.
- *  This program requires a natural number to execute properly.
+/** Imprime el mensaje de ayuda para el usuario.
+ *  En caso de uso incorrecto, imprime el mensaje y el programa finaliza.
+ *  Este programa requiere un fichero de extensión txt para ejecutarse correctamente.
  *
- *  @param[in] argc: Number of command line parameters
- *  @param[in] argv: Vector containing (char*) the parameters
+ *  @param[in] argc: Número de parámetros en la linea de comandos
+ *  @param[in] argv: Vector de parámetros en la linea de comandos
  */
 void Usage(int argc, char *argv[]) {
   if (argc > 1) {
@@ -54,9 +55,9 @@ void Usage(int argc, char *argv[]) {
   }
 }
 
-/** Turns a vector of integers into a string.
- *  @param[in] vector: Vector to turn into string 
- *  @return String containing the vector
+/** Convierte un vector de celdas en un string.
+ *  @param[in] vector: Vector de celdas
+ *  @return String conteniendo las celas del vector
 */
 std::string VectorToString(CellVector vector) {
   std::string result;
@@ -68,12 +69,10 @@ std::string VectorToString(CellVector vector) {
   return result;
 }
 
-/** Stores the results of the search in a file in Markdown format.
- *  @param[in] graph: Graph to search
- *  @param[in] start_node: Starting node
- *  @param[in] end_node: Ending node
- *  @param[in] depth_first: True if depth first search, false if breadth first search
- *  @return Output file stream
+/** Produce los resultados de la búsqueda y los almacena en un fichero en formato Markdown.
+ *  @param[in] labyrinth: Laberinto sobre el que se realiza la búsqueda
+ *  @param[in] instance_name: Nombre de la instancia
+ *  @return Output file stream conteniendo los resultados de la búsqueda
 */
 std::ofstream StoreSearch(Labyrinth& labyrinth, std::string& instance_name) {
   std::ofstream output_file;
@@ -100,18 +99,14 @@ std::ofstream StoreSearch(Labyrinth& labyrinth, std::string& instance_name) {
   return output_file;
 }
 
-/** Checks if a node is in a branch.
- *  @param[in] node: Node to check
- *  @param[in] branch: Branch to check
- *  @return True if the node is in the branch, false otherwise
-*/
-bool FoundInBranch(int node, std::vector<int> branch) {
-  for (int i = 0; i < branch.size(); i++) {
-    if (branch[i] == node) return true;
-  }
-  return false;
-}
-
+/**
+ * @brief Comprueba si un nodo es válido para transitar.
+ * 
+ * @param[in] row: Filas del nodo
+ * @param[in] col: Columna del nodo
+ * @param[in] labyrinth: Laberinto en el que se encuentra el nodo
+ * @return true si el nodo es válido, false en caso contrario
+ */
 bool IsNodeValid(int row, int col, Labyrinth& labyrinth) {
   if (row < 0 || col < 0) return false;
   if (row >= labyrinth.GetRows() || col >= labyrinth.GetColumns()) return false;
@@ -119,6 +114,14 @@ bool IsNodeValid(int row, int col, Labyrinth& labyrinth) {
   return true;
 }
 
+/**
+ * @brief Construye el camino de la solución a partir de los padres.
+ * 
+ * @param[in] current_node: Último nodo comprobado
+ * @param[in] parents: Vector de pares de nodos (hijo, padre)
+ * @param[in] start_node: Nodo inicial del laberinto
+ * @return CellVector que representa el camino de la solución
+ */
 CellVector ConstructPath(Cell current_node, Cell start_node,
                          std::vector<std::pair<Cell,Cell>> parents) {
   CellVector path;
@@ -136,10 +139,10 @@ CellVector ConstructPath(Cell current_node, Cell start_node,
   return path;
 }
 
-/** Gives a random number between two numbers.
- *  @param[in] min: Minimum number
- *  @param[in] max: Maximum number
- *  @return Random number between min and max
+/** Obtiene un número aleatorio entre un rango.
+ *  @param[in] min: Número mínimo
+ *  @param[in] max: Número máximo
+ *  @return Número aleatorio entre min y max
 */
 int GetRandomNumber(int min, int max) {
   return rand() % (max - min + 1) + min;

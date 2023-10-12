@@ -35,21 +35,40 @@ class Cell {
   void SetKind(int kind) { kind_ = kind; }
   std::pair<int, int> GetPos() const { return std::make_pair(i_pos_, j_pos_); }
   std::string GetPosString() const;
+  void SetFValue(int f_value) { f_value_ = f_value; }
+  void SetGValue(int g_value) { g_value_ = g_value; }
+  int GetFValue() const { return f_value_; }
+  int GetGValue() const { return g_value_; }
+  int GetHValue() const { return h_value_; }
+  void CalculateHeuristic(Cell end_node, bool diagonal = 0);
+  std::string PrintValues() const;
+  bool operator==(const Cell& cell) const { return GetPos() == cell.GetPos(); }
+  bool operator<(const Cell& cell) const { return GetFValue() < cell.GetFValue(); }
  private:
-  int i_pos_, j_pos_, f_value_, g_value_, h_value_;
+  int i_pos_, j_pos_, f_value_{0}, g_value_, h_value_;
   int kind_;
+};
+
+struct Instance {
+  std::vector<Cell> path;
+  std::vector<Cell> visited;
+  std::vector<Cell> generated;
 };
 
 class Labyrinth : public Cell {
  public:
   Labyrinth(std::ifstream& input_file);
   void PrintLabyrinth();
+  void PrintPath(std::vector<Cell> open_nodes, std::vector<Cell> closed_nodes, Cell current_node) const;
   void ChangeNode(bool final);
   Cell GetStartNode() const { return start_node_; }
   Cell GetEndNode() const { return end_node_; }
   Cell& Node(std::pair<int, int> pos) { return labyrinth_[pos.first][pos.second]; }
   int GetRows() const { return rows_; }
   int GetColumns() const { return columns_; }
+  Instance AStarSearch() const;
+  std::vector<std::vector<Cell>> GetLabyrinth() const { return labyrinth_; }
+  std::vector<Cell> GetNeighbors(Cell node) const;
  private:
   std::vector<std::vector<Cell>> labyrinth_;
   int rows_;

@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <stack>
 #include <utility>
+#include <unordered_map>
+#include <queue>
 
 class Cell;
 class Labyrinth;
@@ -26,13 +28,9 @@ void Usage(int argc, char *argv[]);
 
 int Menu(Labyrinth& labyrinth, std::string& filename);
 
-struct Instance {
-  std::vector<int> path;
-  std::vector<int> visited;
-  std::vector<int> generated;
-};
+std::string VectorToString(std::vector<Cell> vector);
 
-bool IsValid(int row, int col);
+bool IsNodeValid(int row, int col, Labyrinth& labyrinth);
 
 std::ofstream StoreSearch(Labyrinth& labyrinth, std::string& instance_name);
 

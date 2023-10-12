@@ -39,3 +39,16 @@ std::string Cell::GetPosString() const {
                      ", " + std::to_string(j_pos_ + 1) + ")";
   return pos;
 }
+
+void Cell::CalculateHeuristic(Cell end_node, bool diagonal) {
+  h_value_ = (std::abs(i_pos_ - end_node.GetIPos()) + 
+             std::abs(j_pos_ - end_node.GetJPos())) * 3;
+  f_value_ = g_value_ + h_value_;
+}
+
+std::string Cell::PrintValues() const {
+  std::string values = "f: " + std::to_string(f_value_) + ", g: " + 
+                       std::to_string(g_value_) + ", h: " + 
+                       std::to_string(h_value_);
+  return values;
+}

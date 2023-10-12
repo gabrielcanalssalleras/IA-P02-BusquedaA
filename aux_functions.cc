@@ -45,11 +45,12 @@ void Usage(int argc, char *argv[]) {
  *  @param[in] vector: Vector to turn into string 
  *  @return String containing the vector
 */
-std::string VectorToString(std::vector<int> vector) {
+std::string VectorToString(std::vector<Cell> vector) {
   std::string result;
   if (vector.size() == 0) return "No path";
   for (int i = 0; i < vector.size(); i++) {
-    result += std::to_string(vector[i]);
+    result += "(" + std::to_string(vector[i].GetPos().first + 1) + "," + 
+              std::to_string(vector[i].GetPos().second + 1) + ")";
     if (i != vector.size() - 1) result += "-";
   }
   return result;
@@ -71,7 +72,7 @@ std::ofstream StoreSearch(Labyrinth& labyrinth, std::string& instance_name) {
     output_file << "| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n";
   }
   std::string id = instance_name.substr(0, instance_name.size() - 4);
-  Instance table;// = labyrinth.AStarSearch();
+  Instance table = labyrinth.AStarSearch();
   std::string path = VectorToString(table.path);
   std::string generated = VectorToString(table.generated);
   std::string visited = VectorToString(table.visited);
@@ -95,6 +96,13 @@ bool FoundInBranch(int node, std::vector<int> branch) {
     if (branch[i] == node) return true;
   }
   return false;
+}
+
+bool IsNodeValid(int row, int col, Labyrinth& labyrinth) {
+  if (row < 0 || col < 0) return false;
+  if (row >= labyrinth.GetRows() || col >= labyrinth.GetColumns()) return false;
+  if (labyrinth.Node(std::make_pair(row, col)).GetKind() == 1) return false;
+  return true;
 }
 
 /** Gives a random number between two numbers.

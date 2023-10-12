@@ -48,7 +48,7 @@ int Menu(Labyrinth& labyrinth, std::string& filename) {
     case '4':
       std::cout << "\nPrint Labyrinth\n\n";
       labyrinth.PrintLabyrinth();
-      return 2;
+      return 0;
     case '5':
       std::cout << "\nChange Input File\n\n";
       return 3;

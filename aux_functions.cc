@@ -18,6 +18,9 @@
 
 #include "aux_functions.h"
 
+bool debug;
+bool visual;
+
 /** Prints how to use correctly the program.
  *  In case of incorrect usage, prints the message and the program finishes.
  *  This program requires a natural number to execute properly.
@@ -32,9 +35,19 @@ void Usage(int argc, char *argv[]) {
       std::cout << kHelpText << std::endl;
       exit(EXIT_SUCCESS);
     }
+    if (argc > 2) parameter = argv[2];
+    if (parameter == "-d" || parameter == "--debug") {
+      std::cout << "Debug mode activated\n";
+      debug = true;
+      visual = true;
+    }
+    if (parameter == "-v" || parameter == "--visual") {
+      std::cout << "Visual mode activated\n";
+      visual = true;
+    }
   }
-  if (argc != 2) {
-    std::cout << argv[0] << "-- Search algorithms. Uninformed Search." << std::endl;
+  if (argc < 2 || argc > 3) {
+    std::cout << argv[0] << "-- Search algorithm. A* Search." << std::endl;
     std::cout << "Usage: input_file.txt\n";
     std::cout << "Try " << argv[0] << " --help for more information\n";
     exit(EXIT_SUCCESS);
@@ -45,12 +58,11 @@ void Usage(int argc, char *argv[]) {
  *  @param[in] vector: Vector to turn into string 
  *  @return String containing the vector
 */
-std::string VectorToString(std::vector<Cell> vector) {
+std::string VectorToString(CellVector vector) {
   std::string result;
   if (vector.size() == 0) return "No path";
   for (int i = 0; i < vector.size(); i++) {
-    result += "(" + std::to_string(vector[i].GetPos().first + 1) + "," + 
-              std::to_string(vector[i].GetPos().second + 1) + ")";
+    result += vector[i].GetPosString();
     if (i != vector.size() - 1) result += "-";
   }
   return result;
@@ -103,6 +115,21 @@ bool IsNodeValid(int row, int col, Labyrinth& labyrinth) {
   if (row >= labyrinth.GetRows() || col >= labyrinth.GetColumns()) return false;
   if (labyrinth.Node(std::make_pair(row, col)).GetKind() == 1) return false;
   return true;
+}
+
+CellVector ConstructPath(Cell current_node,
+                         std::vector<std::pair<Cell,Cell>> parents) {
+  CellVector path;
+  while (current_node.GetKind() != 3) {
+    path.push_back(current_node);
+    for (int i = 0; i < parents.size(); i++) {
+      if (parents[i].first == current_node) {
+        current_node = parents[i].second;
+        break;
+      }
+    }
+  }
+  return path;
 }
 
 /** Gives a random number between two numbers.

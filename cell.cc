@@ -21,23 +21,9 @@
 Cell::Cell(int i_pos, int j_pos, int kind) 
   : i_pos_(i_pos), j_pos_(j_pos), kind_(kind) {}
 
-Cell::Cell(int i_pos, int j_pos, int f_value, int g_value, int h_value, int kind)
-  : i_pos_(i_pos), j_pos_(j_pos), f_value_(f_value), 
-  g_value_(g_value), h_value_(h_value), kind_(kind) {}
-
-Cell::Cell() { 
-  i_pos_ = 0;
-  j_pos_ = 0;
-  f_value_ = 0;
-  g_value_ = 0;
-  h_value_ = 0;
-  kind_ = 0;
-}
-
 std::string Cell::GetPosString() const {
-  std::string pos = "(" + std::to_string(i_pos_ + 1) +
-                     ", " + std::to_string(j_pos_ + 1) + ")";
-  return pos;
+  return "(" + std::to_string(i_pos_ + 1) +
+         ", " + std::to_string(j_pos_ + 1) + ")";
 }
 
 void Cell::CalculateHeuristic(Cell end_node, bool diagonal) {
@@ -47,8 +33,6 @@ void Cell::CalculateHeuristic(Cell end_node, bool diagonal) {
 }
 
 std::string Cell::PrintValues() const {
-  std::string values = "f: " + std::to_string(f_value_) + ", g: " + 
-                       std::to_string(g_value_) + ", h: " + 
-                       std::to_string(h_value_);
-  return values;
+  return "f: " + std::to_string(f_value_) + ", g: " + std::to_string(g_value_)
+          + ", h: " + std::to_string(h_value_);
 }

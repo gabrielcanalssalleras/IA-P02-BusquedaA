@@ -37,6 +37,7 @@ typedef std::vector<Cell> CellVector;
 
 // Variable global para el modo debug
 extern bool debug;
+extern bool visual;
 
 // Constantes para la impresión del laberinto
 const std::string kBlueSquare = "\033[1;34m■\033[0m ";    // Closed node

@@ -55,19 +55,21 @@ void Labyrinth::PrintLabyrinth(CellVector open_nodes, CellVector closed_nodes,
                                Cell current_node, CellVector path) const {
   for (std::vector<Cell> row : labyrinth_) {
     for (Cell cell : row) {
-      if (cell.GetKind() == 1) std::cout << kBlackSquare;
-      if (cell.GetKind() == 3) std::cout << kGreenSquare;
-      if (cell.GetKind() == 4) std::cout << kYellowSquare;
-      if (cell.GetKind() == 0) {
-        if (IsClosedNode(cell, closed_nodes))
-          if (cell == current_node || IsInPath(cell, path)) 
-            std::cout << kGreenSquare;
-          else std::cout << kBlueSquare;
-        else if (!open_nodes.empty() && IsOpenNode(cell, open_nodes)) 
-          std::cout << kMagentaSquare;
-        else std::cout << kWhiteSquare;
+      if (visual) std::cout << cell.GetKind() << " ";
+      else {
+        if (cell.GetKind() == 1) std::cout << kBlackSquare;
+        if (cell.GetKind() == 3) std::cout << kGreenSquare;
+        if (cell.GetKind() == 4) std::cout << kYellowSquare;
+        if (cell.GetKind() == 0) {
+          if (IsClosedNode(cell, closed_nodes))
+            if (cell == current_node || IsInPath(cell, path)) 
+              std::cout << kGreenSquare;
+            else std::cout << kBlueSquare;
+          else if (!open_nodes.empty() && IsOpenNode(cell, open_nodes)) 
+            std::cout << kMagentaSquare;
+          else std::cout << kWhiteSquare;
+        }
       }
-      //std::cout << cell.GetKind() << " ";
     }
     std::cout << "\n";
   }

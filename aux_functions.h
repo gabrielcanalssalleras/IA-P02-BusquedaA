@@ -49,5 +49,5 @@ bool FoundInBranch(int node, std::vector<int> branch);
 
 int GetRandomNumber(int min, int max);
 
-CellVector ConstructPath(Cell current_node,
+CellVector ConstructPath(Cell current_node, Cell start_node,
                          std::vector<std::pair<Cell,Cell>> parents);

@@ -89,11 +89,13 @@ std::ofstream StoreSearch(Labyrinth& labyrinth, std::string& instance_name) {
   std::string generated = VectorToString(table.generated);
   std::string visited = VectorToString(table.visited);
   std::string start = std::to_string(labyrinth.GetStartNode().GetKind());
+  int cost = 0;
+  if (path != "No path") cost = table.path.back().GetGValue();
   output_file << "| " << id << " | " << std::to_string(labyrinth.GetRows()) 
               << " | " << std::to_string(labyrinth.GetColumns()) << " | "
               << labyrinth.GetStartNode().GetPosString() << " | "
               << labyrinth.GetEndNode().GetPosString() << " | " 
-              << path << " | " << "s"/* graph.CalculateCost(table.path) */ << " | " 
+              << path << " | " << cost << " | " 
               << generated << " | " << visited << " | \n";
   return output_file;
 }
@@ -117,7 +119,7 @@ bool IsNodeValid(int row, int col, Labyrinth& labyrinth) {
   return true;
 }
 
-CellVector ConstructPath(Cell current_node,
+CellVector ConstructPath(Cell current_node, Cell start_node,
                          std::vector<std::pair<Cell,Cell>> parents) {
   CellVector path;
   while (current_node.GetKind() != 3) {
@@ -129,6 +131,8 @@ CellVector ConstructPath(Cell current_node,
       }
     }
   }
+  path.push_back(start_node);
+  std::reverse(path.begin(), path.end());
   return path;
 }
 

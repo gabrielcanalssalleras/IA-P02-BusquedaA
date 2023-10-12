@@ -36,3 +36,11 @@ std::string Cell::PrintValues() const {
   return "f: " + std::to_string(f_value_) + ", g: " + std::to_string(g_value_)
           + ", h: " + std::to_string(h_value_);
 }
+
+bool Cell::IsDiagonal(Cell node, std::vector<std::vector<Cell>> labyrinth) const {
+  std::pair<int, int> a_pos = GetPos();
+  std::pair<int, int> b_pos = node.GetPos();
+  int dx = std::abs(a_pos.first - b_pos.first);
+  int dy = std::abs(a_pos.second - b_pos.second);
+  return dx == 1 && dy == 1;
+}

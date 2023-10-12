@@ -30,7 +30,8 @@ void Labyrinth::PrintLabyrinth(CellVector open_nodes, CellVector closed_nodes,
           if (cell == current_node || IsInPath(cell, path)) 
             std::cout << kGreenSquare;
           else std::cout << kBlueSquare;
-        else if (IsOpenNode(cell, open_nodes)) std::cout << kMagentaSquare;
+        else if (!open_nodes.empty() && IsOpenNode(cell, open_nodes)) 
+          std::cout << kMagentaSquare;
         else std::cout << kWhiteSquare;
       }
       //std::cout << cell.GetKind() << " ";
@@ -83,7 +84,7 @@ CellVector Labyrinth::GetNeighbors(Cell node) const {
 }
 
 Instance Labyrinth::AStarSearch() const {
-  CellVector open_nodes{GetStartNode()}, closed_nodes;
+  CellVector open_nodes{GetStartNode()}, closed_nodes, generated{GetStartNode()};
   Cell current_node;
   std::vector<std::pair<Cell,Cell>> parents;
   current_node.CalculateHeuristic(GetEndNode());
@@ -99,18 +100,22 @@ Instance Labyrinth::AStarSearch() const {
       if (IsClosedNode(neighbors[i], closed_nodes)) continue;
       if (!IsOpenNode(neighbors[i], open_nodes)) {
         neighbors[i].CalculateHeuristic(GetEndNode());
+        if (current_node.IsDiagonal(neighbors[i], labyrinth_)) 
+          neighbors[i].SetGValue(current_node.GetGValue() + 7);
+        else neighbors[i].SetGValue(current_node.GetGValue() + 5);
         open_nodes.push_back(neighbors[i]);
+        generated.push_back(neighbors[i]);
         parents.push_back(std::make_pair(neighbors[i], current_node));
       }
     }
-    std::sort(open_nodes.begin(), open_nodes.end());
+    if (!open_nodes.empty()) std::sort(open_nodes.begin(), open_nodes.end());
     if (debug) {
       PrintLabyrinth(open_nodes, closed_nodes, current_node);
       while (std::cin.get() != '\n');
     }
   }
-  if (open_nodes.empty() && !path_found) return Instance();
-  CellVector path = ConstructPath(current_node, parents);
+  if (open_nodes.empty() && !path_found) return Instance{{}, generated, closed_nodes};
+  CellVector path = ConstructPath(current_node, GetStartNode(), parents);
   PrintLabyrinth(open_nodes, closed_nodes, Cell(-1, -1, -1), path);
-  return Instance{path, closed_nodes, open_nodes};
+  return Instance{path, generated, closed_nodes};
 }

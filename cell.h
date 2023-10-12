@@ -46,6 +46,8 @@ class Cell {
   void SetFValue(int f_value) { f_value_ = f_value; }
   
   void CalculateHeuristic(Cell end_node, bool diagonal = 0);
+
+  bool IsDiagonal(Cell node, std::vector<std::vector<Cell>> labyrinth) const;
   
   bool operator==(const Cell& cell) const { return GetPos() == cell.GetPos(); }
   bool operator<(const Cell& cell) const { return GetFValue() < cell.GetFValue(); }

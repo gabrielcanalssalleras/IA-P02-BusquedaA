@@ -32,22 +32,21 @@ bool visual;
 void Usage(int argc, char *argv[]) {
   if (argc > 1) {
     std::string parameter{argv[1]};
-    if (parameter == "--help") {
+    if (parameter == "--help") {  // Texto de ayuda
       std::cout << kHelpText << std::endl;
       exit(EXIT_SUCCESS);
     }
     if (argc > 2) parameter = argv[2];
-    if (parameter == "-d" || parameter == "--debug") {
+    if (parameter == "-d" || parameter == "--debug") { // Modo debug
       std::cout << "Debug mode activated\n";
       debug = true;
-      visual = true;
     }
-    if (parameter == "-v" || parameter == "--visual") {
+    if (parameter == "-v" || parameter == "--visual") {  // Modo visual
       std::cout << "Visual mode activated\n";
       visual = true;
     }
   }
-  if (argc < 2 || argc > 3) {
+  if (argc < 2 || argc > 3) {  // Uso incorrecto
     std::cout << argv[0] << "-- Search algorithm. A* Search." << std::endl;
     std::cout << "Usage: input_file.txt\n";
     std::cout << "Try " << argv[0] << " --help for more information\n";
@@ -61,10 +60,10 @@ void Usage(int argc, char *argv[]) {
 */
 std::string VectorToString(CellVector vector) {
   std::string result;
-  if (vector.size() == 0) return "No path";
+  if (vector.size() == 0) return "No path";  // Si no hay camino
   for (int i = 0; i < vector.size(); i++) {
-    result += vector[i].GetPosString();
-    if (i != vector.size() - 1) result += "-";
+    result += vector[i].GetPosString();  // Añade la posición del nodo de la forma (x,y)
+    if (i != vector.size() - 1) result += "-"; // Añade un guión entre nodos
   }
   return result;
 }
@@ -76,20 +75,20 @@ std::string VectorToString(CellVector vector) {
 */
 std::ofstream StoreSearch(Labyrinth& labyrinth, std::string& instance_name) {
   std::ofstream output_file;
-  output_file.open("busquedas.md", std::ios_base::app);
-  if (output_file.tellp() == 0) { 
+  output_file.open("busquedas.md", std::ios_base::app);               // Abre el fichero en modo append
+  if (output_file.tellp() == 0) {                                     // Si el fichero está vacío, añade la cabecera en Markdown
     output_file << "| Instancia | n | m | S | E |  Camino | ";
-    output_file << "Coste | Nodos Generados | Nodos inspeccionados |\n";
+    output_file << "Coste | Nodos Generados | Nodos inspeccionados |\n"; 
     output_file << "| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n";
   }
-  std::string id = instance_name.substr(0, instance_name.size() - 4);
-  Instance table = labyrinth.AStarSearch();
-  std::string path = VectorToString(table.path);
-  std::string generated = VectorToString(table.generated);
-  std::string visited = VectorToString(table.visited);
+  std::string id = instance_name.substr(0, instance_name.size() - 4); // Elimina la extensión
+  Instance table = labyrinth.AStarSearch();                           // Realiza la búsqueda
+  std::string path = VectorToString(table.path);                      // Convierte el camino a string
+  std::string generated = VectorToString(table.generated);            // Convierte los nodos generados a string
+  std::string visited = VectorToString(table.visited);                // Convierte los nodos visitados a string
   std::string start = std::to_string(labyrinth.GetStartNode().GetKind());
   int cost = 0;
-  if (path != "No path") cost = table.path.back().GetGValue();
+  if (path != "No path") cost = table.path.back().GetGValue();        // Si hay camino, obtiene el coste 
   output_file << "| " << id << " | " << std::to_string(labyrinth.GetRows()) 
               << " | " << std::to_string(labyrinth.GetColumns()) << " | "
               << labyrinth.GetStartNode().GetPosString() << " | "
@@ -108,9 +107,9 @@ std::ofstream StoreSearch(Labyrinth& labyrinth, std::string& instance_name) {
  * @return true si el nodo es válido, false en caso contrario
  */
 bool IsNodeValid(int row, int col, Labyrinth& labyrinth) {
-  if (row < 0 || col < 0) return false;
-  if (row >= labyrinth.GetRows() || col >= labyrinth.GetColumns()) return false;
-  if (labyrinth.Node(std::make_pair(row, col)).GetKind() == 1) return false;
+  if (row < 0 || col < 0) return false; // Si el nodo está fuera del laberinto
+  if (row >= labyrinth.GetRows() || col >= labyrinth.GetColumns()) return false; 
+  if (labyrinth.Node(std::make_pair(row, col)).GetKind() == 1) return false; // Si el nodo es un muro
   return true;
 }
 
@@ -125,17 +124,17 @@ bool IsNodeValid(int row, int col, Labyrinth& labyrinth) {
 CellVector ConstructPath(Cell current_node, Cell start_node,
                          std::vector<std::pair<Cell,Cell>> parents) {
   CellVector path;
-  while (current_node.GetKind() != 3) {
-    path.push_back(current_node);
+  while (current_node.GetKind() != 3) {         // Mientras no se llegue al nodo inicial
+    path.push_back(current_node); 
     for (int i = 0; i < parents.size(); i++) {
       if (parents[i].first == current_node) {
-        current_node = parents[i].second;
+        current_node = parents[i].second;      // Se añade el padre del nodo actual al camino
         break;
       }
     }
   }
   path.push_back(start_node);
-  std::reverse(path.begin(), path.end());
+  std::reverse(path.begin(), path.end());      // Se invierte el camino para mostrarlo de la forma correcta
   return path;
 }
 
@@ -146,4 +145,43 @@ CellVector ConstructPath(Cell current_node, Cell start_node,
 */
 int GetRandomNumber(int min, int max) {
   return rand() % (max - min + 1) + min;
+}
+
+/**
+ * @brief Comprueba si un nodo abierto tiene un padre mejor que el actual.
+ * 
+ * @param node: Nodo abierto que se quiere comprobar
+ * @param current_node: Nodo actual de la búsqueda. Posible padre de node
+ * @param labyrinth: Laberinto en el que se encuentra el nodo
+ * @param parents: Vector de pares de nodos (hijo, padre)
+ */
+void UpdateIfBetter(Cell& node, Cell& current_node, 
+                          std::vector<CellVector> labyrinth,
+                          std::vector<std::pair<Cell,Cell>>& parents) {
+  int g_value = current_node.GetGValue();
+  if (current_node.IsDiagonal(node, labyrinth)) g_value += 7; // Si el nodo es diagonal el coste es 7
+  else g_value += 5;                                          // Si el nodo es adyacente el coste es 5
+  for (int i = 0; i < parents.size(); i++) {                  // Se busca el nodo en el vector de padres
+    if (parents[i].first == node) {
+      if (g_value < node.GetGValue()) {                       // Si el padre actual es mejor que el anterior
+        node.SetGValue(g_value);                                // Se actualiza el coste
+        parents[i].second = current_node;                       // Se actualiza el padre
+      }
+      break;
+    }
+  }
+}
+
+/**
+ * @brief Comprueba si un nodo vecino es inválido para transitar.
+ * 
+ * @param neighbor: Nodo vecino
+ * @param current_node: Nodo actual de la búsqueda
+ * @param closed_nodes: Vector de nodos cerrados
+ * @return true si el nodo es inválido, false en caso contrario
+ */
+bool InvalidNeighbor(Cell& neighbor, Cell& current_node, 
+                     CellVector& closed_nodes) {
+  return neighbor.GetPos() == std::make_pair(-1, -1) ||  // Si el nodo no existe en el laberinto
+  IsClosedNode(neighbor, closed_nodes);                  // Si el nodo ya está cerrado
 }

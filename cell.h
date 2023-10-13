@@ -61,6 +61,8 @@ class Cell {
   int i_pos_{0}, j_pos_{0}, kind_{0};
   // Coste acumulado g(n), heurística h(n) y total f(n)
   int f_value_{0}, g_value_{0}, h_value_{0}; 
+
+  Cell* parent_;
 };
 
 // Define un vector de Cells como CellVector
@@ -91,10 +93,13 @@ class Labyrinth : public Cell {
   Cell GetEndNode() const { return end_node_; }
   int GetRows() const { return rows_; }
   int GetColumns() const { return columns_; }
-  std::vector<CellVector> GetLabyrinth() const { return labyrinth_; }
+  std::vector<CellVector> GetLabyrinth() const { return labyrinth_; } // Devuelve el laberinto
   
   // Obtiene los vecinos de un nodo
   CellVector GetNeighbors(Cell node) const;
+
+  // Calcula los valores de un nodo
+  void CalculateValues(Cell& node, Cell& current_node) const;
 
   // Accede a un nodo del laberinto por su posición
   Cell& Node(std::pair<int, int> pos) { return labyrinth_[pos.first][pos.second]; }

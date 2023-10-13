@@ -25,21 +25,21 @@
  *  @param[in] argv Vector de parámetros en la linea de comandos
  */
 int main(int argc, char* argv[]) {
-  Usage(argc, argv);
+  Usage(argc, argv);              // Comprueba el modo de uso
   std::ifstream input_file;
-  std::string file_name{argv[1]};
-  input_file.open(file_name);
+  std::string file_name{argv[1]}; // Nombre del fichero de entrada
+  input_file.open(file_name);     // Se abre el fichero de entrada
   if (input_file.fail()) {
     std::cerr << "The file failed to open, use --help for further information\n";
-    return 1;
+    return 1;                     // Error al abrir el fichero
   }
   Labyrinth labyrinth(input_file);
-  labyrinth.PrintLabyrinth();
+  labyrinth.PrintLabyrinth();     // Se imprime el laberinto
   int signal = 0;
-  while (signal != 1)
+  while (signal != 1)             // Se repite hasta que se de la señal de salida
   {
-    signal = Menu(labyrinth, file_name);
-    if (signal == 3) { // Cambiar fichero de entrada
+    signal = Menu(labyrinth, file_name); // Se muestra el menú y se recibe la señal
+    if (signal == 3) {                   // Cambiar fichero de entrada
       std::cout << "Enter the new file name: ";
       std::cin >> file_name;
       input_file.close();
@@ -51,5 +51,5 @@ int main(int argc, char* argv[]) {
       labyrinth = Labyrinth(input_file);
     }
   }
-  return 0;
+  return 0;                       // Fin del programa con éxito
 }

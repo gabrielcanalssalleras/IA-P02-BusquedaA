@@ -53,10 +53,10 @@ int Menu(Labyrinth& labyrinth, std::string& filename) {
       return 0;
     case '5': // Cambiar fichero de entrada
       std::cout << "\nChange Input File\n\n";
-      return 3;
+      return 3; // Señal para cambiar el fichero de entrada
     case '6': // Salir
       std::cout << "\nExit\n\n";
-      return 1;
+      return 1; // Señal para salir del programa
     default: // Opción inválida
       std::cout << "\nInvalid option\n\n";
       return 0;

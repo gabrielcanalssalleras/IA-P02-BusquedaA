@@ -77,3 +77,12 @@ int GetRandomNumber(int min, int max);
 // Construye el camino de la solución a partir de los padres
 CellVector ConstructPath(Cell current_node, Cell start_node,
                          std::vector<std::pair<Cell,Cell>> parents);
+
+// Actualiza el padre de un nodo si es mejor que el actual
+void UpdateIfBetter(Cell& node, Cell& current_node, 
+                          std::vector<CellVector> labyrinth,
+                          std::vector<std::pair<Cell,Cell>>& parents);
+
+// Comprueba si un nodo vecino es inválido para transitar
+bool InvalidNeighbor(Cell& neighbor, Cell& current_node, 
+                                     CellVector& closed_nodes);

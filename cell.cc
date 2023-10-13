@@ -34,8 +34,8 @@ Cell::Cell(int i_pos, int j_pos, int kind)
  * @return std::string con la posición de la celda
  */
 std::string Cell::GetPosString() const {
-  return "(" + std::to_string(i_pos_ + 1) +
-         ", " + std::to_string(j_pos_ + 1) + ")";
+  return "(" + std::to_string(i_pos_ + 1) +         // +1 para que empiece en 1
+         ", " + std::to_string(j_pos_ + 1) + ")";   
 }
 
 /**
@@ -45,9 +45,9 @@ std::string Cell::GetPosString() const {
  * @param diagonal: booleano que indica si se trata de un movimiento diagonal
  */
 void Cell::CalculateHeuristic(Cell end_node, bool diagonal) {
-  h_value_ = (std::abs(i_pos_ - end_node.GetIPos()) + 
-             std::abs(j_pos_ - end_node.GetJPos())) * 3;
-  f_value_ = g_value_ + h_value_;
+  h_value_ = (std::abs(i_pos_ - end_node.GetIPos()) +    // Distancia Manhattan
+             std::abs(j_pos_ - end_node.GetJPos())) * 3; 
+  f_value_ = g_value_ + h_value_;                       // f = g + h
 }
 
 /**
@@ -72,5 +72,5 @@ bool Cell::IsDiagonal(Cell node, std::vector<std::vector<Cell>> labyrinth) const
   std::pair<int, int> b_pos = node.GetPos();
   int dx = std::abs(a_pos.first - b_pos.first);
   int dy = std::abs(a_pos.second - b_pos.second);
-  return dx == 1 && dy == 1;
+  return dx == 1 && dy == 1; // Si dx y dy son 1, los nodos están en diagonal
 }

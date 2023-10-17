@@ -159,7 +159,7 @@ void UpdateIfBetter(Cell& node, Cell& current_node,
                           std::vector<CellVector> labyrinth,
                           std::vector<std::pair<Cell,Cell>>& parents) {
   int g_value = current_node.GetGValue();
-  if (current_node.IsDiagonal(node, labyrinth)) g_value += 7; // Si el nodo es diagonal el coste es 7
+  if (current_node.IsDiagonal(node, labyrinth)) g_value += 10;// Si el nodo es diagonal el coste es 10
   else g_value += 5;                                          // Si el nodo es adyacente el coste es 5
   for (int i = 0; i < parents.size(); i++) {                  // Se busca el nodo en el vector de padres
     if (parents[i].first == node) {

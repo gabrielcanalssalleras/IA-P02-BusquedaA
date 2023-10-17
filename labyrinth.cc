@@ -139,7 +139,7 @@ CellVector Labyrinth::GetNeighbors(Cell node) const {
 void Labyrinth::CalculateValues(Cell& node, Cell& current_node) const {
   node.CalculateHeuristic(GetEndNode());                // Se calcula la heurística del nodo h(n) y su f(n)
   if (current_node.IsDiagonal(node, labyrinth_))        // Actualiza el valor g(n) del nodo:
-    node.SetGValue(current_node.GetGValue() + 7);         // Si el nodo es diagonal, el coste es 7
+    node.SetGValue(current_node.GetGValue() + 10);        // Si el nodo es diagonal, el coste es 10
   else node.SetGValue(current_node.GetGValue() + 5);      // Si el nodo es adyacente, el coste es 5
 }
 

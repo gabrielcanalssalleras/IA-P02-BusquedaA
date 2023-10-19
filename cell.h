@@ -71,8 +71,8 @@ typedef std::vector<Cell> CellVector;
 // Representa una solución de la búsqueda
 struct Instance {
   CellVector path;      // Camino de la solución
-  CellVector visited;   // Nodos visitados durante la búsqueda
   CellVector generated; // Nodos generados durante la búsqueda
+  CellVector visited;   // Nodos visitados durante la búsqueda
 };
 
 // Clase Labyrinth (hereda de Cell)

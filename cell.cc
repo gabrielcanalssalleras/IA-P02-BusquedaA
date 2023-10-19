@@ -38,6 +38,25 @@ std::string Cell::GetPosString() const {
          ", " + std::to_string(j_pos_ + 1) + ")";   
 }
 
+int euclideanDistance(double x1, double y1, double x2, double y2) {
+    double dx = x1 - x2;
+    double dy = y1 - y2;
+    return sqrt(dx * dx + dy * dy);
+}
+
+int hammingDistance(int x1, int y1, int x2, int y2) {
+    int xorResult = (x1 ^ x2) + (y1 ^ y2); // Calculate the XOR of x coordinates and y coordinates and sum them up
+    int distance = 0;
+
+    // Count the number of set bits in the XOR result
+    while (xorResult > 0) {
+        distance += xorResult & 1;
+        xorResult >>= 1;
+    }
+
+    return distance;
+}
+
 /**
  * @brief Calcula la heurística de la celda durante la búsqueda
  * 
@@ -45,8 +64,10 @@ std::string Cell::GetPosString() const {
  * @param diagonal: booleano que indica si se trata de un movimiento diagonal
  */
 void Cell::CalculateHeuristic(Cell end_node, bool diagonal) {
-  h_value_ = (std::abs(i_pos_ - end_node.GetIPos()) +    // Distancia Manhattan
-             std::abs(j_pos_ - end_node.GetJPos())) * 3; 
+   h_value_ = /* (std::abs(i_pos_ - end_node.GetIPos()) +    // Distancia Manhattan
+             std::abs(j_pos_ - end_node.GetJPos())) * 3; */  
+     //hammingDistance(i_pos_, j_pos_, end_node.GetIPos(), end_node.GetJPos());
+     euclideanDistance(i_pos_, j_pos_, end_node.GetIPos(), end_node.GetJPos());
 }
 
 /**

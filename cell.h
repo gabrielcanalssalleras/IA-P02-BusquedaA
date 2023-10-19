@@ -76,7 +76,7 @@ struct Instance {
 };
 
 // Clase Labyrinth (hereda de Cell)
-class Labyrinth : public Cell {
+class Labyrinth {
  public:
   // Constructores
   Labyrinth(std::ifstream& input_file);

@@ -47,7 +47,6 @@ std::string Cell::GetPosString() const {
 void Cell::CalculateHeuristic(Cell end_node, bool diagonal) {
   h_value_ = (std::abs(i_pos_ - end_node.GetIPos()) +    // Distancia Manhattan
              std::abs(j_pos_ - end_node.GetJPos())) * 3; 
-  f_value_ = g_value_ + h_value_;                       // f = g + h
 }
 
 /**

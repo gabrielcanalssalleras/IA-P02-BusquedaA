@@ -32,7 +32,7 @@ Labyrinth::Labyrinth(std::ifstream& input_file) {
     CellVector row;
     std::getline(input_file, line);
     for (int j = 0, k = 0; j < columns_; j++, k++) {   // Se lee el laberinto
-      if (line[k] == '3') start_node_ = Cell(i, j, 3); // El nodo inicial se representa con un 3
+      if (line[k] == '3') {start_node_ = Cell(i, j, 3);} // El nodo inicial se representa con un 3
       if (line[k] == '4') end_node_ = Cell(i, j, 4);   // El nodo final se representa con un 4
       row.push_back(Cell(i, j, line[k++] - '0'));      // El resto de nodos se representan con un 0 o un 1
     }
@@ -137,10 +137,26 @@ CellVector Labyrinth::GetNeighbors(Cell node) const {
  * @param current_node: nodo actual de la búsqueda
  */
 void Labyrinth::CalculateValues(Cell& node, Cell& current_node) const {
-  node.CalculateHeuristic(GetEndNode());                // Se calcula la heurística del nodo h(n) y su f(n)
   if (current_node.IsDiagonal(node, labyrinth_))        // Actualiza el valor g(n) del nodo:
     node.SetGValue(current_node.GetGValue() + 10);        // Si el nodo es diagonal, el coste es 10
   else node.SetGValue(current_node.GetGValue() + 5);      // Si el nodo es adyacente, el coste es 5
+  node.CalculateHeuristic(GetEndNode());                // Se calcula la heurística del nodo h(n) y su f(n)
+  node.SetFValue(node.GetGValue() + node.GetHValue());
+}
+
+// SortByFValue
+/**
+ * @brief Ordena un vector de nodos según su valor f(n)
+ * 
+ * @param nodes: vector de nodos a ordenar
+ * @return CellVector con los nodos ordenados
+ */
+CellVector SortByFValue(CellVector nodes) {
+  // sort by f(n) and if f(n) is equal, sort by the closest to the end node
+  std::sort(nodes.begin(), nodes.end(), [](Cell a, Cell b) {
+    return a.GetFValue() < b.GetFValue();
+  });
+  return nodes;
 }
 
 /**
@@ -150,33 +166,35 @@ void Labyrinth::CalculateValues(Cell& node, Cell& current_node) const {
  */
 Instance Labyrinth::AStarSearch() const {
   CellVector open_nodes{GetStartNode()}, closed_nodes, generated{GetStartNode()};
-  Cell current_node;
-  std::vector<std::pair<Cell,Cell>> parents;                  // Vector de pares de nodos (hijo, padre)
-  current_node.CalculateHeuristic(GetEndNode());              // Se calcula la heurística del nodo inicial y su f(n)
-  bool path_found = false;    
-  while (!open_nodes.empty() && !path_found) {                // Mientras haya nodos abiertos y no se haya encontrado el camino
-    current_node = open_nodes[0];                               // Se selecciona el nodo con menor f(n)
-    closed_nodes.push_back(current_node);                       // Se añade el nodo a los nodos cerrados
-    open_nodes.erase(open_nodes.begin());                       // Se elimina el nodo de los nodos abiertos
-    if (current_node.GetKind() == 4) path_found = true;         // Si el nodo es el nodo final, se ha encontrado el camino
-    for (Cell neighbor : GetNeighbors(current_node)) {          // Por cada vecino del nodo
+  Cell current_node = GetStartNode();
+  std::vector<std::pair<Cell,Cell>> parents;                        // Vector de pares de nodos (hijo, padre)
+  current_node.CalculateHeuristic(GetEndNode());                    // Se calcula la heurística del nodo inicial y su f(n)
+  current_node.SetFValue(current_node.GetGValue() + current_node.GetHValue());
+  bool path_found = false, first = true;
+  while (true) {                                                    // Mientras haya nodos abiertos y no se haya encontrado el camino
+    if (open_nodes.empty()) return Instance{{}, generated, closed_nodes}; // Si no hay camino se devuelve una instancia vacía
+    if (first) first = false;
+    else current_node = open_nodes[0];                              // Se selecciona el nodo con menor f(n)
+    closed_nodes.push_back(current_node);                           // Se añade el nodo a los nodos cerrados
+    open_nodes.erase(open_nodes.begin());                           // Se elimina el nodo de los nodos abiertos
+    if (current_node.GetKind() == 4) break;                         // Si el nodo es el nodo final, se ha encontrado el camino
+    for (Cell neighbor : GetNeighbors(current_node)) {              // Por cada vecino del nodo
       if (InvalidNeighbor(neighbor, current_node, closed_nodes)) continue;
-      if (!IsOpenNode(neighbor, open_nodes)) {                  // Si el nodo no está en los nodos abiertos
-        CalculateValues(neighbor, current_node);                  // Se calculan los valores g, h y f del nodo
-        open_nodes.push_back(neighbor);                           // Se añade el nodo a los nodos abiertos y a los nodos generados
-        generated.push_back(neighbor);                      
+      if (!IsOpenNode(neighbor, open_nodes)) {                      // Si el nodo no está en los nodos abiertos
+        CalculateValues(neighbor, current_node);                      // Se calculan los valores g, h y f del nodo
+        open_nodes.push_back(neighbor);                               // Se añade el nodo a los nodos abiertos y a los nodos generados
+        generated.push_back(neighbor);     
         parents.push_back(std::make_pair(neighbor, current_node));  // Se añade el par (hijo, padre) al vector de padres
       } else 
         UpdateIfBetter(neighbor, current_node, GetLabyrinth(), parents); // Si el nodo está abierto, se actualiza en caso de ser mejor
     }
-    if (!open_nodes.empty()) std::sort(open_nodes.begin(), open_nodes.end()); // Reordena según f(n)
-    if (debug) {                                              // Si se está en modo debug
-      PrintLabyrinth(open_nodes, closed_nodes, current_node);   // Se imprime el laberinto en cada iteración
-      while (std::cin.get() != '\n');                           // Se espera a que se pulse enter para continuar
+    if (!open_nodes.empty()) open_nodes = SortByFValue(open_nodes); // Reordena según f(n)
+    if (debug) {                                                    // Si se está en modo debug
+      PrintLabyrinth(open_nodes, closed_nodes, current_node);         // Se imprime el laberinto en cada iteración
+      while (std::cin.get() != '\n');                                 // Se espera a que se pulse enter para continuar
     }
   }
-  if (open_nodes.empty() && !path_found) return Instance{{}, generated, closed_nodes}; // Si no hay camino se devuelve una instancia vacía
-  CellVector path = ConstructPath(current_node, GetStartNode(), parents);              // Se construye el camino
-  PrintLabyrinth(open_nodes, closed_nodes, Cell(-1, -1, -1), path);                    // Se imprime el laberinto final
-  return Instance{path, generated, closed_nodes};                                      // Se devuelve la instancia con la solución
+  CellVector path = ConstructPath(current_node, GetStartNode(), parents);   // Se construye el camino
+  PrintLabyrinth(open_nodes, closed_nodes, Cell(-1, -1, -1), path);         // Se imprime el laberinto final
+  return Instance{path, generated, closed_nodes};                           // Se devuelve la instancia con la solución
 }

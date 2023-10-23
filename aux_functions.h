@@ -31,8 +31,6 @@
 class Cell;
 class Labyrinth;
 
-#include "cell.h"
-
 // Define un vector de celdas como CellVector
 typedef std::vector<Cell> CellVector;
 

@@ -17,6 +17,8 @@
  */
 
 #include "aux_functions.h"
+#include "cell.h"
+#include "labyrinth.h"
 
 // Variables globales para el modo debug y visual
 bool debug;

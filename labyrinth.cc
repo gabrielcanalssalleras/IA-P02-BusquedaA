@@ -15,7 +15,7 @@
  * Referencias:
  * https://drive.google.com/file/d/1ZSin5hXGXC3EMwkbmoFqA_ZgnnQxcq7F/view
  */
-#include "cell.h"
+#include "labyrinth.h"
 
 /**
  * @brief Construye un nuevo objeto Labyrinth:: Labyrinth

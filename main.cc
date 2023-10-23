@@ -19,6 +19,8 @@
  */
 
 #include "aux_functions.h"
+#include "cell.h"
+#include "labyrinth.h"
 
 /** Función principal del programa.
  *  @param[in] argc Número de parámetros en la linea de comandos

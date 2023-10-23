@@ -16,6 +16,7 @@
  */
 
 #include "aux_functions.h"
+#include "labyrinth.h"
 
 /**
  * @brief Imprime el menú y opera en torna a la opción escogida

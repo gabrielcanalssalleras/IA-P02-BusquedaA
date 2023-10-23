@@ -83,11 +83,11 @@ void Cell::CalculateHeuristic(Cell end_node, int chosen_heuristic) {
                std::abs(j_pos_ - end_node.GetJPos())) * 3;
     break;
   case 2: // Distancia euclídea
-    h_value_ = euclideanDistance(i_pos_, j_pos_, 
+    h_value_ = diagonalDistance(i_pos_, j_pos_, 
         end_node.GetIPos(), end_node.GetJPos());
     break;
   case 3: // Distancia Diagonal
-    h_value_ = diagonalDistance(i_pos_, j_pos_, 
+    h_value_ = euclideanDistance(i_pos_, j_pos_, 
         end_node.GetIPos(), end_node.GetJPos());
     break;
   }

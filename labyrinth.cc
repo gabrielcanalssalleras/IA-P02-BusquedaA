@@ -131,6 +131,33 @@ CellVector Labyrinth::GetNeighbors(Cell node) const {
 }
 
 /**
+ * @brief Allows to change the heuristic used in the search
+ * 
+ */
+void Labyrinth::ChangeHeuristic() {
+  std::cout << "Choose a heuristic:\n";
+  std::cout << "1. Manhattan Distance\n";
+  std::cout << "3. Euclidean Distance\n";
+  std::cout << "4. Diagonal Distance\n";
+  char option;
+  std::cin >> option;
+  switch (option) {
+    case '1': // Distancia Manhattan
+      chosen_heuristic_ = 1;
+      break;
+    case '2': // Distancia Diagonal
+      chosen_heuristic_ = 2;
+      break;
+    case '3': // Distancia Euclídea
+      chosen_heuristic_ = 3;
+      break;
+    default: // Opción inválida
+      std::cout << "\nInvalid option\n\n";
+      break;
+  }
+}
+
+/**
  * @brief Calcula los valores g, h y f de un nodo
  * 
  * @param node: nodo del que se quieren calcular los valores
@@ -140,7 +167,7 @@ void Labyrinth::CalculateValues(Cell& node, Cell& current_node) const {
   if (current_node.IsDiagonal(node, labyrinth_))        // Actualiza el valor g(n) del nodo:
     node.SetGValue(current_node.GetGValue() + 10);        // Si el nodo es diagonal, el coste es 10
   else node.SetGValue(current_node.GetGValue() + 5);      // Si el nodo es adyacente, el coste es 5
-  node.CalculateHeuristic(GetEndNode());                // Se calcula la heurística del nodo h(n) y su f(n)
+  node.CalculateHeuristic(GetEndNode(), GetChosenHeuristic());                // Se calcula la heurística del nodo h(n) y su f(n)
   node.SetFValue(node.GetGValue() + node.GetHValue());
 }
 
@@ -168,7 +195,7 @@ Instance Labyrinth::AStarSearch() const {
   CellVector open_nodes{GetStartNode()}, closed_nodes, generated{GetStartNode()};
   Cell current_node = GetStartNode();
   std::vector<std::pair<Cell,Cell>> parents;                        // Vector de pares de nodos (hijo, padre)
-  current_node.CalculateHeuristic(GetEndNode());                    // Se calcula la heurística del nodo inicial y su f(n)
+  current_node.CalculateHeuristic(GetEndNode(), GetChosenHeuristic());  // Se calcula la heurística del nodo inicial y su f(n)
   current_node.SetFValue(current_node.GetGValue() + current_node.GetHValue());
   bool path_found = false, first = true;
   while (true) {                                                    // Mientras haya nodos abiertos y no se haya encontrado el camino

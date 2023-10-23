@@ -29,9 +29,10 @@ int Menu(Labyrinth& labyrinth, std::string& filename) {
   std::cout << "1. A* Search\n";
   std::cout << "2. Set Initial Node\n";
   std::cout << "3. Set Final Node\n";
-  std::cout << "4. Print Labyrinth\n";
-  std::cout << "5. Change Input File\n";
-  std::cout << "6. Exit\n";
+  std::cout << "4. Choose Heuristic\n";
+  std::cout << "5. Print Labyrinth\n";
+  std::cout << "6. Change Input File\n";
+  std::cout << "7. Exit\n";
   char option;
   std::cin >> option;
   switch (option) {
@@ -47,14 +48,18 @@ int Menu(Labyrinth& labyrinth, std::string& filename) {
       std::cout << "\nSet Final Node\n\n";
       labyrinth.ChangeNode(1);
       return 0;
-    case '4': // Imprimir laberinto
+    case '4': // Cambiar heurística
+      std::cout << "\nChoose Heuristic\n\n";
+      labyrinth.ChangeHeuristic();
+      return 0;
+    case '5': // Imprimir laberinto
       std::cout << "\nPrint Labyrinth\n\n";
       labyrinth.PrintLabyrinth();
       return 0;
-    case '5': // Cambiar fichero de entrada
+    case '6': // Cambiar fichero de entrada
       std::cout << "\nChange Input File\n\n";
       return 3; // Señal para cambiar el fichero de entrada
-    case '6': // Salir
+    case '7': // Salir
       std::cout << "\nExit\n\n";
       return 1; // Señal para salir del programa
     default: // Opción inválida

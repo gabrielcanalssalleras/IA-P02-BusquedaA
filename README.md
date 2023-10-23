@@ -20,6 +20,7 @@ Se desplegará en la consola un menú con las opciones disponibles para la ejecu
 1. A* Search
 2. Set Initial Node
 3. Set Final Node
+4. Choose Heuristic
 4. Print Labyrinth
 5. Change Input File
 6. Exit
@@ -45,7 +46,15 @@ Esta opción solicita por consola el nodo final del laberinto. El nodo final deb
 
 Importante: El que fuera nodo final anterior no se elimina del laberinto, sino que se convierte en un muro.
 
-### 4. Print Labyrinth
+### 4. Choose Heuristic
+
+Esta opción permite seleccionar la heurística a utilizar en el algoritmo de búsqueda A*. Las heurísticas disponibles son:
+
+- Distancia Manhattan
+- Distancia Euclídea
+- Distancia Diagonal
+
+### 5. Print Labyrinth
 
 Esta opción imprime en consola el laberinto representando cada nodo mediante el carácter '■'. Cada nodo tendrá un color asociado dependiendo de su estado:
 
@@ -63,11 +72,11 @@ En caso de utilizar el modo visual se utilizarán números para representar los 
 - 3 - Nodo inicial.
 - 4 - Nodo final.
 
-### 5. Change Input File
+### 6. Change Input File
 
 Esta opción permite cambiar el fichero de entrada sobre el que se lee el laberinto. El fichero tendrá que ser en formato ".txt". En caso de que no sea un fichero válido, se seguirá ejecutando el programa sobre el fichero inicial.
 
-### 6. Exit
+### 7. Exit
 
 Esta opción finaliza la ejecución del programa.
 

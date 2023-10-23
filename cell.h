@@ -47,7 +47,7 @@ class Cell {
   void SetFValue(int f_value) { f_value_ = f_value; }
   
   // Calcula la heurística de la celda durante la búsqueda
-  void CalculateHeuristic(Cell end_node, bool diagonal = 0);
+  void CalculateHeuristic(Cell end_node, int chosen_heuristic = 1);
 
   // Comprueba si la celda es diagonal a otra
   bool IsDiagonal(Cell node, std::vector<std::vector<Cell>> labyrinth) const;
@@ -93,6 +93,7 @@ class Labyrinth {
   Cell GetEndNode() const { return end_node_; }
   int GetRows() const { return rows_; }
   int GetColumns() const { return columns_; }
+  int GetChosenHeuristic() const { return chosen_heuristic_; }
   std::vector<CellVector> GetLabyrinth() const { return labyrinth_; } // Devuelve el laberinto
   
   // Obtiene los vecinos de un nodo
@@ -104,6 +105,9 @@ class Labyrinth {
   // Accede a un nodo del laberinto por su posición
   Cell& Node(std::pair<int, int> pos) { return labyrinth_[pos.first][pos.second]; }
 
+  // Allows to change the heuristic
+  void ChangeHeuristic();
+
   // Búsqueda A*
   Instance AStarSearch() const;
  
@@ -112,6 +116,7 @@ class Labyrinth {
   std::vector<CellVector> labyrinth_;
   int rows_, columns_;
   Cell start_node_, end_node_;
+  int chosen_heuristic_{1};
 };
 
 // Funciones auxiliares que comprueban si un nodo está en un vector

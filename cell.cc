@@ -34,8 +34,8 @@ Cell::Cell(int i_pos, int j_pos, int kind)
  * @return std::string con la posición de la celda
  */
 std::string Cell::GetPosString() const {
-  return "(" + std::to_string(i_pos_ + 1) +         // +1 para que empiece en 1
-         ", " + std::to_string(j_pos_ + 1) + ")";   
+  return "(" + std::to_string(i_pos_) +         // +1 para que empiece en 1
+         ", " + std::to_string(j_pos_) + ")";   
 }
 
 /**

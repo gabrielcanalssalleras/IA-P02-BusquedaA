@@ -87,20 +87,20 @@ void Labyrinth::ChangeNode(bool final) {
   std::cout << "Enter the column of the node: ";
   std::cin >> j_pos;
   // Se comprueba que el nodo esté dentro del laberinto
-  if (i_pos < 1 || i_pos > rows_ || j_pos < 1 || j_pos > columns_) {  
+  if (i_pos < 0 || i_pos > rows_ - 1 || j_pos < 0 || j_pos > columns_ - 1) {  
     std::cerr << "The node is out of bounds. No changes applied.\n";
     return;
   }
   if (final) {
     std::pair<int, int> end_pos = end_node_.GetPos();   // El nodo final se convierte en un muro
     Node(end_pos).SetKind(1);
-    labyrinth_[i_pos - 1][j_pos - 1] = Cell(i_pos - 1, j_pos - 1, 4);
-    end_node_ = Cell(i_pos - 1, j_pos - 1, 4);          // Se actualiza el nodo final
+    labyrinth_[i_pos][j_pos] = Cell(i_pos, j_pos, 4);
+    end_node_ = Cell(i_pos, j_pos, 4);          // Se actualiza el nodo final
   } else {
     std::pair<int, int> start_pos = start_node_.GetPos();
     Node(start_pos).SetKind(1);                         // El nodo inicial se convierte en un muro
-    labyrinth_[i_pos - 1][j_pos - 1] = Cell(i_pos - 1, j_pos - 1, 3);
-    start_node_ = Cell(i_pos - 1, j_pos - 1, 3);        // Se actualiza el nodo inicial
+    labyrinth_[i_pos][j_pos] = Cell(i_pos, j_pos, 3);
+    start_node_ = Cell(i_pos, j_pos, 3);        // Se actualiza el nodo inicial
   }
   std::cout << "The " << (final ? "final" : "initial") << " node has been set to"
             << " (" << i_pos << ", " << j_pos << ")\n"; // Se imprime el nodo modificado
@@ -137,8 +137,8 @@ CellVector Labyrinth::GetNeighbors(Cell node) const {
 void Labyrinth::ChangeHeuristic() {
   std::cout << "Choose a heuristic:\n";
   std::cout << "1. Manhattan Distance\n";
-  std::cout << "3. Euclidean Distance\n";
-  std::cout << "4. Diagonal Distance\n";
+  std::cout << "2. Euclidean Distance\n";
+  std::cout << "3. Diagonal Distance\n";
   char option;
   std::cin >> option;
   switch (option) {

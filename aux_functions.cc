@@ -150,18 +150,23 @@ CellVector ConstructPath(Cell current_node, Cell start_node,
  */
 void UpdateIfBetter(Cell& node, Cell& current_node, 
                           std::vector<CellVector> labyrinth,
-                          std::vector<std::pair<Cell,Cell>>& parents) {
+                          std::vector<std::pair<Cell,Cell>>& parents,
+                          CellVector& open_nodes) {
   int g_value = current_node.GetGValue();
   if (current_node.IsDiagonal(node, labyrinth)) g_value += 7; // Si el nodo es diagonal el coste es 7
   else g_value += 5;                                          // Si el nodo es adyacente el coste es 5
   for (int i = 0; i < parents.size(); i++) {  
     if (parents[i].first == node) {
       if (g_value < parents[i].first.GetGValue()) {                       // Si el padre actual es mejor que el anterior
-        parents[i].first.SetGValue(g_value);                              // Se actualiza el coste
-        parents[i].first.SetFValue(g_value + parents[i].first.GetHValue());   // Se actualiza el valor total
-        // el nodo
-        parents[i].second = current_node;                       // Se actualiza el padre
-
+        parents[i].second = current_node;                                 // Se actualiza el padre
+        parents[i].first.SetGValue(g_value);                              // Se actualiza el coste g
+        parents[i].first.SetFValue(g_value + parents[i].first.GetHValue());// Se actualiza el coste f
+        for (int j = 0; j < open_nodes.size(); j++) {                      // Se actualiza el nodo en la lista de nodos abiertos
+          if (open_nodes[j] == parents[i].first) {
+            open_nodes[j] = parents[i].first;
+            break;
+          }
+        }
       }
       break;
     }

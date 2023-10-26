@@ -238,16 +238,8 @@ Instance Labyrinth::AStarSearch() const {
   while (true) {                                                    // Mientras haya nodos abiertos y no se haya encontrado el camino
     if (open_nodes.empty()) return Instance{{}, generated, closed_nodes}; // Si no hay camino se devuelve una instancia vacía
     if (first) first = false;
-    //else current_node = ChooseRandomNode(open_nodes); 
     else current_node = open_nodes[0];                              // Se selecciona el nodo con menor f(n)
     closed_nodes.push_back(current_node);                           // Se añade el nodo a los nodos cerrados
-    // erase the current node from the open nodes
-/*     for (int i = 0; i < open_nodes.size(); i++) {
-      if (open_nodes[i] == current_node) {
-        open_nodes.erase(open_nodes.begin() + i);
-        break;
-      }
-    } */
     open_nodes.erase(open_nodes.begin());                           // Se elimina el nodo de los nodos abiertos
     if (current_node.GetKind() == 4) break;                         // Si el nodo es el nodo final, se ha encontrado el camino
     for (Cell neighbor : GetNeighbors(current_node)) {              // Por cada vecino del nodo
@@ -258,7 +250,8 @@ Instance Labyrinth::AStarSearch() const {
         generated.push_back(neighbor);
         parents.push_back(std::make_pair(neighbor, current_node));  // Se añade el par (hijo, padre) al vector de padres
       } else 
-        UpdateIfBetter(neighbor, current_node, GetLabyrinth(), parents); // Si el nodo está abierto, se actualiza en caso de ser mejor
+        UpdateIfBetter(neighbor, current_node, GetLabyrinth(), 
+                                              parents, open_nodes); // Si el nodo está abierto, se actualiza en caso de ser mejor
     
     }
     if (!open_nodes.empty()) open_nodes = SortByFValue(open_nodes); // Reordena según f(n)

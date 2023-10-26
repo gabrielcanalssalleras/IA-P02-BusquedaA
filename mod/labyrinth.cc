@@ -255,7 +255,8 @@ Instance Labyrinth::AStarSearch() const {
         generated.push_back(neighbor);     
         parents.push_back(std::make_pair(neighbor, current_node));  // Se añade el par (hijo, padre) al vector de padres
       } else 
-        UpdateIfBetter(neighbor, current_node, GetLabyrinth(), parents); // Si el nodo está abierto, se actualiza en caso de ser mejor
+        UpdateIfBetter(neighbor, current_node, GetLabyrinth(), 
+                                          parents, open_nodes); // Si el nodo está abierto, se actualiza en caso de ser mejor
     }
     if (!open_nodes.empty()) open_nodes = SortByFValue(open_nodes); // Reordena según f(n)
     if (debug) {                                                    // Si se está en modo debug

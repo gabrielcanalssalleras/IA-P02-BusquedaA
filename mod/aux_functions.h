@@ -80,7 +80,8 @@ CellVector ConstructPath(Cell current_node, Cell start_node,
 // Actualiza el padre de un nodo si es mejor que el actual
 void UpdateIfBetter(Cell& node, Cell& current_node, 
                           std::vector<CellVector> labyrinth,
-                          std::vector<std::pair<Cell,Cell>>& parents);
+                          std::vector<std::pair<Cell,Cell>>& parents,
+                          CellVector& open_nodes);
 
 // Comprueba si un nodo vecino es inválido para transitar
 bool InvalidNeighbor(Cell& neighbor, Cell& current_node, 

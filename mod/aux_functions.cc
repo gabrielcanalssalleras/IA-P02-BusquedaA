@@ -159,6 +159,7 @@ void UpdateIfBetter(Cell& node, Cell& current_node,
       if (g_value < node.GetGValue()) {                       // Si el padre actual es mejor que el anterior
         node.SetGValue(g_value);                                // Se actualiza el coste
         node.SetFValue(g_value + node.GetHValue());             // Se actualiza el valor total
+        // el nodo
         parents[i].second = current_node;                       // Se actualiza el padre
       }
       break;

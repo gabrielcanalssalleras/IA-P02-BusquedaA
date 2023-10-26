@@ -39,6 +39,8 @@ int Menu(Labyrinth& labyrinth, std::string& filename) {
   switch (option) {
     case '1': // Realizar búsqueda A*
       std::cout << "\nA* Search\n\n";
+      // ejecutar 10 veces
+      for (int i = 0; i < 10; i++)
       StoreSearch(labyrinth, filename);
       return 0;
     case '2': // Cambiar nodo inicial

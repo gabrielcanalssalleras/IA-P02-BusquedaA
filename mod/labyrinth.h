@@ -67,6 +67,9 @@ class Labyrinth {
   // Búsqueda A*
   Instance AStarSearch() const;
  
+  std::ofstream LabyrinthToFile (CellVector open_nodes, CellVector closed_nodes,
+                               Cell current_node, CellVector path) const;
+
  private:
   // Atributos
   std::vector<CellVector> labyrinth_;

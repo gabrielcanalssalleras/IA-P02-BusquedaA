@@ -44,6 +44,7 @@ class Cell {
   void SetKind(int kind) { kind_ = kind; }
   void SetGValue(int g_value) { g_value_ = g_value; }
   void SetFValue(int f_value) { f_value_ = f_value; }
+  void SetHValue(int h_value) { h_value_ = h_value; }
   
   // Calcula la heurística de la celda durante la búsqueda
   void CalculateHeuristic(Cell end_node, int chosen_heuristic = 1);

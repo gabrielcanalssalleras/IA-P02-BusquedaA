@@ -40,6 +40,24 @@ Labyrinth::Labyrinth(std::ifstream& input_file) {
   }
 }
 
+std::ofstream Labyrinth::LabyrinthToFile (CellVector open_nodes, CellVector closed_nodes,
+                               Cell current_node, CellVector path) const {
+  std::ofstream output_file;
+  output_file.open("laberintos_solucionados.txt", std::ios_base::app);
+  for (std::vector<Cell> row : labyrinth_) {
+    for (Cell cell : row) {
+        // si está en el path imprimir un 2
+        if (std::find(path.begin(), path.end(), cell) == path.end())
+        output_file << cell.GetKind() << " ";
+        else output_file << "2 ";
+    }
+    output_file << "\n";
+  }
+  output_file << "\n\n";
+
+  return output_file;
+}
+
 /**
  * @brief Imprime el laberinto. Los muros se imprimirán en negro,
  *        los nodos libres en blanco, el nodo inicial en verde y
@@ -55,7 +73,13 @@ void Labyrinth::PrintLabyrinth(CellVector open_nodes, CellVector closed_nodes,
                                Cell current_node, CellVector path) const {
   for (std::vector<Cell> row : labyrinth_) {
     for (Cell cell : row) {
-      if (visual) std::cout << cell.GetKind() << " ";         // En el modo visual el laberinto se representa con números
+      if (visual) {
+        // si está en el path imprimir un 2
+        if (std::find(path.begin(), path.end(), cell) == path.end())
+        std::cout << cell.GetKind() << " ";
+        else std::cout << "2 ";
+
+      }         // En el modo visual el laberinto se representa con números
       else {
         if (cell.GetKind() == 1) std::cout << kBlackSquare;   // Muro = Cuadrado negro
         if (cell.GetKind() == 3) std::cout << kGreenSquare;   // Nodo inicial = Cuadrado verde
@@ -192,35 +216,10 @@ CellVector SortByFValue(CellVector nodes) {
  *  @param[in] max: Número máximo
  *  @return Número aleatorio entre min y max
 */
-int GetRandomNumber(int min, int max) {
-  return rand() % (max - min + 1) + min;
-}
-
-Cell ChooseRandomNode(CellVector nodes) {
-  double sum_t{0};
-  std::vector<double> intervals;
-  for (Cell node : nodes) {
-    double t_n = 1.0 / node.GetGValue();
-    sum_t += t_n;
-    double p_n = t_n / sum_t;
-    //std::cout << "node" << node.GetPosString()  <<  " t(n): " << t_n << " p(n): " << p_n << "\n";
-    intervals.push_back(p_n);
-  }
-  // Generar un intervalo con los valores de p(n)
-  srand(static_cast<unsigned>(time(0)));
-  double random_number = static_cast<double>(rand()) / RAND_MAX;
-  double cumulative_prob = 0.0;
-  // back to front for
-  for (size_t i = intervals.size() - 1; i >= 0; i--) {
-      cumulative_prob += intervals[i];
-      //std::cout << "cumulative_prob: " << cumulative_prob << "\n";
-      //std::cout << "random_number: " << random_number << "\n";
-      //std::cout << "intervals[i]: " << intervals[i] << "\n";
-      if (random_number < cumulative_prob) {
-        //std::cout << "i: " << i << " is node: " << nodes[i].GetPos().first << ", " << nodes[i].GetPos().second << "\n";
-          return nodes[i];  // Devolver la celda correspondiente.
-      }
-  }
+int GetRandomNumber(CellVector nodes) {
+  if (nodes.size() == 1) return 0;
+  if (nodes.size() == 2) return rand() % 2;
+  return rand() % 3;
 }
 
 /**
@@ -237,18 +236,15 @@ Instance Labyrinth::AStarSearch() const {
   bool path_found = false, first = true;
   while (true) {                                                    // Mientras haya nodos abiertos y no se haya encontrado el camino
     if (open_nodes.empty()) return Instance{{}, generated, closed_nodes}; // Si no hay camino se devuelve una instancia vacía
+    int random = GetRandomNumber(open_nodes);
     if (first) first = false;
-    //else current_node = ChooseRandomNode(open_nodes); 
-    else current_node = open_nodes[0];                              // Se selecciona el nodo con menor f(n)
+    else {
+      //std::cout << "random: " << random << "\n";
+      current_node = open_nodes[random]; 
+    }
     closed_nodes.push_back(current_node);                           // Se añade el nodo a los nodos cerrados
     // erase the current node from the open nodes
-/*     for (int i = 0; i < open_nodes.size(); i++) {
-      if (open_nodes[i] == current_node) {
-        open_nodes.erase(open_nodes.begin() + i);
-        break;
-      }
-    } */
-    open_nodes.erase(open_nodes.begin());                           // Se elimina el nodo de los nodos abiertos
+    open_nodes.erase(open_nodes.begin() + random);                           // Se elimina el nodo de los nodos abiertos
     if (current_node.GetKind() == 4) break;                         // Si el nodo es el nodo final, se ha encontrado el camino
     for (Cell neighbor : GetNeighbors(current_node)) {              // Por cada vecino del nodo
       if (InvalidNeighbor(neighbor, current_node, closed_nodes)) continue;
@@ -269,5 +265,6 @@ Instance Labyrinth::AStarSearch() const {
   }
   CellVector path = ConstructPath(current_node, GetStartNode(), parents);   // Se construye el camino
   PrintLabyrinth(open_nodes, closed_nodes, Cell(-1, -1, -1), path);         // Se imprime el laberinto final
+  LabyrinthToFile(open_nodes, closed_nodes, Cell(-1, -1, -1), path);
   return Instance{path, generated, closed_nodes};                           // Se devuelve la instancia con la solución
 }

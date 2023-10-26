@@ -127,7 +127,7 @@ CellVector ConstructPath(Cell current_node, Cell start_node,
                          std::vector<std::pair<Cell,Cell>> parents) {
   CellVector path;
   while (current_node.GetKind() != 3) {         // Mientras no se llegue al nodo inicial
-    path.push_back(current_node); 
+    path.push_back(current_node);
     for (int i = 0; i < parents.size(); i++) {
       if (parents[i].first == current_node) {
         current_node = parents[i].second;      // Se añade el padre del nodo actual al camino
